@@ -18,17 +18,60 @@
  */
 
 function onDeviceReady() {
-  WebViewer({
-    path: "js/lib",
-    pdftronServer: 'https://demo.pdftron.com/', // Make sure to change this option to point to your own server in production
-    initialDoc: 'https://pdftron.s3.amazonaws.com/downloads/pl/sample.pdf',
-    enableAnnotations: true,
-    disabledElements: [
-      'menuButton'
-    ]
-  }, document.getElementById('viewer')).then(instance => {
-    // call apis (https://www.pdftron.com/documentation/web/guides/ui/apis)
-  })
+	WebViewer({
+			path: 'js/lib',
+			pdftronServer: 'https://demo.pdftron.com/', // Make sure to change this option to point to your own server in production
+			initialDoc: 'https://pdftron.s3.amazonaws.com/downloads/pl/sample.pdf',
+			enableAnnotations: true,
+			disabledElements: ['menuButton'],
+		},
+		document.getElementById('viewer')
+	).then((instance) => {
+		// i'm trying to customize the reader like this
+		// but on IOS, it does not go into this code block
+		// on browser , it works though
+
+		alert('web viewer instance initialized');
+		console.log('web viewer instance initialized');
+		instance.closeElements(['toolsHeader', 'header']);
+		instance.disableElements([
+			'pageNavOverlay',
+			'searchPanelResizeBar',
+			'header',
+			'toolsHeader',
+			'noteState',
+			'notesPanelResizeBar',
+			'leftPanelResizeBar',
+			'annotationPopup',
+			'annotationGroupButton',
+			'annotationCommentButton',
+			'linkButton',
+		]);
+
+		instance.enableElements([
+			'richTextPopup',
+			'richTextUnderlineButton',
+			'richTextItalicButton',
+			'richTextColorPalette',
+		]);
+
+		instance.disableReplyForAnnotations(() => {
+			return true;
+		});
+
+		instance.contextMenuPopup.add([
+			{
+				type: 'actionButton',
+				img: 'icon-panel-bookmark-line',
+				title: 'Bookmark',
+				onClick: () => {
+					alert('add bookmark');
+				},
+			},
+		]);
+	});
 }
 
-document.addEventListener("deviceready", onDeviceReady, false);
+document.addEventListener('deviceready', onDeviceReady, false);
+
+alert('App started');
